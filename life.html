@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Object with Text</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: lightgray;
+        }
+        /* Navbar styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: black;
+            color: white;
+            z-index: 100;
+        }
+
+        .logo {
+            margin-left: 1rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            color: #f97316;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-grow: 1;
+            justify-content: center;
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #f97316;
+        }
+        #main-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            height: 80%;
+            margin-top: 70px;
+        }
+        #scene-container {
+            width: 60%;
+            height: 100%;
+            background-color: lightgray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #text-container {
+            width: 40%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding-left: 50px;
+            font-size: 24px;
+            color: #333;
+            text-align: left;
+            background-color: lightgray;
+        }
+        #text-container  {
+            display: flex;
+            gap: 10px; /* Adjust the gap as needed */
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+        #text-container a button {
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 17px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+
+        }
+        #text-container a button:hover {
+            background-color: #367c39;
+        }
+
+        .description-box {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.139.0/build/three.module.js",
+                "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.139.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">My Website</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="faq.html">FAQ</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+    <div id="main-content">
+        <div id="scene-container"></div>
+        <div id="text-container">
+            <div class="description-box">
+                This is a description of the block.  It can contain several lines of text explaining the features or purpose of the 3D object.
+                The text will wrap within the box.
+            </div>
+            <a href="index.html">
+                <button>Next Product</button>
+            </a>
+            <a href="contact.html">
+                <button>Buy Now</button>
+            </a>
+        </div>
+    </div>
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+        // --- Scene Setup ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth * 0.6 / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const container = document.getElementById('scene-container');
+        renderer.setSize(window.innerWidth * 0.6, window.innerHeight);
+        container.appendChild(renderer.domElement);
+        renderer.setClearColor("lightgray");
+
+        // Position camera
+        camera.position.set(-0.5, 0.5, 2); // Adjusted camera position for closer view
+        camera.lookAt(scene.position);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);  // Increased intensity
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);  // Increased intensity
+        directionalLight.position.set(1, 1, 2);
+        scene.add(directionalLight);
+
+        // Load 3D model
+        const gltfloader = new GLTFLoader();
+        let stone; // Will hold the loaded model
+        gltfloader.load('./models/stone.glb',
+            (gltf) => {
+                stone= gltf.scene;
+                // Center the model
+                const boundingBox = new THREE.Box3().setFromObject(stone);
+                const center = new THREE.Vector3();
+                boundingBox.getCenter(center);
+                stone.position.x = -center.x;
+                stone.position.y = -center.y;
+                stone.position.z = -center.z;
+
+                scene.add(stone);
+
+                // Add controls after the model is loaded
+                const controls = new OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.1;
+                controls.enableZoom = true; // Enable zooming
+                controls.zoomSpeed = 1.0;
+                controls.target.set(0, 0, 0); // Set the target point the camera looks at
+                controls.update();
+
+                // --- Animation Loop ---
+                function animate() {
+                    requestAnimationFrame(animate);
+                    if (stone) {
+                        stone.rotation.y += 0.01;
+                      ;
+                    }
+                    controls.update();
+                    renderer.render(scene, camera);
+                }
+
+                animate();
+
+                // --- Handle Resizing ---
+                function handleWindowResize() {
+                    camera.aspect = window.innerWidth * 0.6 / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth * 0.6, window.innerHeight);
+                }
+                window.addEventListener('resize', handleWindowResize, false);
+            },
+            (xhr) => {
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            },
+            (error) => {
+                console.error('Failed to load model:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.style.position = 'absolute';
+                errorDiv.style.top = '50%';
+                errorDiv.style.left = '50%';
+                errorDiv.style.transform = 'translate(-50%, -50%)';
+                errorDiv.style.backgroundColor = 'red';
+                errorDiv.style.color = 'white';
+                errorDiv.style.padding = '20px';
+                errorDiv.style.zIndex = '1000';
+                errorDiv.textContent = 'Failed to load 3D model. Check the console for details.';
+                container.appendChild(errorDiv);
+            }
+        );
+    </script>
+</body>
+</html>

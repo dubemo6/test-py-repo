@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: black;
+            color: white;
+            z-index: 100;
+        }
+
+        .logo {
+            margin-left: 1rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            color: #f97316;
+        }
+
+        .nav-links {
+            display: none;
+            flex-grow: 1;
+            justify-content: center;
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #f97316;
+        }
+
+        #mobile-menu-button {
+            display: block;
+            color: white;
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        #mobile-menu {
+            display: none;
+            position: fixed;
+            top: 4rem;
+            right: 1rem;
+            background-color: black;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+            width: 90%;
+            max-width: 250px;
+        }
+
+        #mobile-menu.show {
+            display: block;
+        }
+
+        #mobile-menu a {
+            display: block;
+            padding: 0.75rem;
+            margin: 0.25rem 0;
+            border-radius: 0.375rem;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #mobile-menu a:hover {
+            background-color: #1f2937;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem 2rem;
+        }
+
+        .heading-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .heading-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-item h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-item h3::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: #f97316;
+        }
+
+        .faq-item.open h3::after {
+            content: '-';
+        }
+
+        .faq-item p {
+            font-size: 1rem;
+            color: #4b5563;
+            line-height: 1.7;
+            display: none;
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .faq-item.open p {
+            display: block;
+        }
+
+        .faq-item hr {
+            margin-top: 1.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Mobile menu styles */
+        #mobile-menu {
+            display: none;
+            position: fixed;
+            top: 4rem;
+            right: 1rem;
+            background-color: black;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+            width: 90%;
+            max-width: 250px;
+        }
+
+        #mobile-menu.show {
+            display: block;
+        }
+
+        #mobile-menu a {
+            display: block;
+            padding: 0.75rem;
+            margin: 0.25rem 0;
+            border-radius: 0.375rem;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #mobile-menu a:hover {
+            background-color: #1f2937;
+        }
+
+        /* Medium screens and larger */
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                /* Show on medium screens and up */
+            }
+
+            #mobile-menu-button {
+                display: none;
+                /* Hide on medium screens and up */
+            }
+
+            #mobile-menu {
+                display: none !important;
+            }
+        }
+
+        /* form styles */
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-container label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .form-container input,
+        .form-container select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-container button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container .result {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e8f4ea;
+            border: 1px solid #c4e3cb;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100" style="background-image: url('images/Screenshot\ 2025-05-15\ 045320.png'); background-size: cover;">
+    <header class="navbar">
+        <a href="/" class="logo">Logo</a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="/faq.html">FAQ</a>
+            <a href="/contact.html">Contact Us</a>
+        </nav>
+        <button id="mobile-menu-button" aria-label="Toggle Mobile Menu">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+        </button>
+        <div id="mobile-menu" class="hidden">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="faq.html">FAQ</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+    </header>
+    <div class="container">
+        <h2 class="heading-section">Order Request Form</h2>
+        <form id="orderForm" class="form-container">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="product">What do you want to purchase?</label>
+            <select id="product" name="product" required>
+                <option value="">-- Select --</option>
+                <option value="Blocks">Blocks</option>
+                <option value="Paving Stones">Paving Stones</option>
+            </select>
+
+            <label for="measurement">Select Measurement:</label>
+            <select id="measurement" name="measurement" required>
+                <option value="">-- Select --</option>
+                <option value="6-inch">6-inch</option>
+                <option value="9-inch">9-inch</option>
+                <option value="12-inch">12-inch</option>
+            </select>
+
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="result" id="result" style="display:none;"></div>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2025 Company Name. All rights reserved.</p>
+    </footer>
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('show');
+            });
+        }
+
+        // Close menu when a link is clicked
+        if (mobileMenu) {
+            mobileMenu.addEventListener('click', (event) => {
+                if (event.target.tagName === 'A') {
+                    mobileMenu.classList.remove('show');
+                }
+            });
+        }
+
+        // Responsive navigation
+        function updateNavigation() {
+            if (window.innerWidth >= 768) {
+                mobileMenu.classList.remove('show');
+            }
+        }
+
+        window.addEventListener('resize', updateNavigation);
+        updateNavigation();
+
+        const form = document.getElementById('orderForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = form.name.value;
+            const product = form.product.value;
+            const measurement = form.measurement.value;
+            const email = form.email.value;
+            const phone = form.phone.value;
+
+            const storedData = {
+                name,
+                product,
+                measurement,
+                email,
+                phone
+            };
+
+            localStorage.setItem('orderData', JSON.stringify(storedData));
+
+            resultDiv.innerHTML = `<h3>Order Summary</h3>
+             <p><strong>Name:</strong> ${name}</p>
+             <p><strong>Product:</strong> ${product}</p>
+             <p><strong>Measurement:</strong> ${measurement}</p>
+             <p><strong>Email:</strong> ${email}</p>
+             <p><strong>Phone:</strong> ${phone}</p>`;
+
+            resultDiv.style.display = 'block';
+            form.reset();
+        });
+    </script>
+</body>
+</html>
